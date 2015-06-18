@@ -15,33 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-trait Dependencies {
-  object Library extends Library {
-    override protected[this] def version = Release
+package edu.nccu.plsm.archetype
+
+import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
+import org.scalatest.{FlatSpec, Matchers}
+
+/**
+ * @version
+ * @since
+ */
+class HelloWorldTest extends FlatSpec with MockitoSugar with Matchers {
+
+  class HelloWordClass extends HelloWorld
+
+  "HelloWordClass" should """return "Mock" by method """ in {
+    val mockMain = mock[HelloWordClass]
+    when(mockMain.getMessage).thenReturn("Mock")
+    mockMain.getMessage should be("Mock")
   }
-  import Library._
-
-  lazy val logback = Seq(
-    logbackCore,
-    logbackClassic
-  )
-
-  lazy val slf4j = Seq(
-    slf4jApi
-  )
-
-  lazy val tool = Seq(
-    scopt,
-    typesafeConfig
-  )
-
-  lazy val testing = Seq(
-    scalatest,
-    mockito
-  )
-
-  lazy val project = slf4j ++ logback ++ tool ++ testing
 
 }
-
-object Dependencies extends Dependencies

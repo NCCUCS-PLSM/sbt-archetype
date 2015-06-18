@@ -28,7 +28,8 @@ object Settings {
   lazy val default = Seq(
     organization := "edu.nccu.plsm.archetype",
     version := "0.0.1-SNAPSHOT",
-    scalaVersion := Version.scalaVersion12,
+    crossScalaVersions := Seq(Version.scalaVersion12, Version.scalaVersion11),
+    scalaVersion := crossScalaVersions.value.head,
     scalacOptions ++= commonScalacOptions,
     scalacOptions ++= {
       scalaVersion.value match {
