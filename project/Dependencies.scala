@@ -1,3 +1,5 @@
+import sbt.Def
+
 /*
  * Licensed to the Programming Language and Software Methodology Lab (PLSM)
  * under one or more contributor license agreements.  See the NOTICE file
@@ -34,6 +36,10 @@ trait Dependencies {
     scopt,
     typesafeConfig
   )
+
+  lazy val scalaTools = Def.setting{
+    Seq(scalaCompiler.value, scalaReflect.value)
+  }
 
   lazy val testing = Seq(
     scalatest,

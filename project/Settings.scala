@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import com.atlassian.labs.gitstamp.GitStampPlugin._
 import org.scalastyle.sbt.ScalastylePlugin._
 import sbt.Keys._
@@ -33,14 +32,14 @@ object Settings {
     scalacOptions ++= commonScalacOptions,
     scalacOptions ++= {
       scalaVersion.value match {
-        case ScalaSubVersion("11") => {
+        case ScalaMinorVersion("11") => {
           ConsoleLogger().info("Using scala 2.11 configuration")
           Seq(
             "-optimise",
             "-Xverify"
           )
         }
-        case ScalaSubVersion("12") => {
+        case ScalaMinorVersion("12") => {
           ConsoleLogger().info("Using scala 2.12 configuration")
           Seq(
             "-Ybackend:GenBCode",
@@ -97,7 +96,7 @@ object Settings {
         Package.ManifestAttributes(repoInfo: _*)
     }
   )
-  private[this] lazy val ScalaSubVersion = """^2\.([0-9]+)\..+$""".r
+  private[this] lazy val ScalaMinorVersion = """^2\.([0-9]+)\..+$""".r
   private[this] lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
   private[this] lazy val testScalastyle = taskKey[Unit]("testScalastyle")
   private[this] lazy val commonScalacOptions = Seq(

@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+import sbt.Keys._
 import sbt._
 
 trait BasicLibrary extends VersionHelper {
@@ -46,13 +47,15 @@ trait LogbackLibrary extends BasicLibrary {
 }
 
 trait ToolLibrary extends BasicLibrary {
-  lazy val typesafeConfig     =  "com.typesafe"        %   "config"               %  v"1.3.0"
-  lazy val scopt              =  "com.github.scopt"    %   "scopt_2.11"           %  v"3.3.0"
+  lazy val scalaReflect       = Def.setting { "org.scala-lang"      %   "scala-reflect"        %   (scalaVersion in ThisBuild).value}
+  lazy val scalaCompiler      = Def.setting { "org.scala-lang"      %   "scala-compiler"       %   (scalaVersion in ThisBuild).value}
+  lazy val typesafeConfig     =               "com.typesafe"        %   "config"               %  v"1.3.0"
+  lazy val scopt              =               "com.github.scopt"    %   "scopt_2.11"           %  v"3.3.0"
 }
 
 trait TestingLibrary extends BasicLibrary {
-  lazy val mockito            =  "org.mockito"         %   "mockito-core"         %  v"2.0.14-beta"   %  Test
-  lazy val scalatest          =  "org.scalatest"       %   "scalatest_2.12.0-M1"  %  v"2.2.5-M1"      %  Test
+  lazy val mockito            =               "org.mockito"         %   "mockito-core"         %  v"2.0.14-beta"   %  Test
+  lazy val scalatest          =               "org.scalatest"       %%  "scalatest"            %  v"2.2.5-M1"      %  Test
 }
 
 trait Library extends Slf4jLibrary with LogbackLibrary with ToolLibrary with TestingLibrary
