@@ -16,23 +16,27 @@
  * limitations under the License.
  */
 
+package edu.nccu.plsm
+
 import sbt._
 
+// reviewed: 20150714
 trait BasicPlugin extends VersionHelper {
-  lazy val updates      = "com.timushev.sbt"         %  "sbt-updates"           %  v"0.1.8"
-  lazy val buildInfo    = "com.eed3si9n"             %  "sbt-buildinfo"         %  v"0.4.0"
-  lazy val scoverage    = "org.scoverage"            %  "sbt-scoverage"         %  v"1.1.0"
   lazy val assembly     = "com.eed3si9n"             %  "sbt-assembly"          %  v"0.13.0"
-  lazy val multiJvm     = "com.typesafe.sbt"         %  "sbt-multi-jvm"         %  v"0.3.11"
+  lazy val buildInfo    = "com.eed3si9n"             %  "sbt-buildinfo"         %  v"0.4.0"
   lazy val cpd          = "de.johoop"                %  "cpd4sbt"               %  v"1.1.5"
-  lazy val scalastyle   = "org.scalastyle"           %% "scalastyle-sbt-plugin" %  v"0.7.0"
-  lazy val stats        = "com.orrsella"             %  "sbt-stats"             %  v"1.0.5"
   lazy val gitStamp     = "com.atlassian.labs"       %  "sbt-git-stamp"         %  v"0.1.2"
   lazy val meow         = "com.37pieces"             %  "sbt-meow"              %  v"0.1"
+  lazy val multiJvm     = "com.typesafe.sbt"         %  "sbt-multi-jvm"         %  v"0.3.11"
+  lazy val scalariform  = "com.typesafe.sbt"         %  "sbt-scalariform"       %  v"1.3.0"
+  lazy val scalastyle   = "org.scalastyle"           %% "scalastyle-sbt-plugin" %  v"0.7.0"
+  lazy val scoverage    = "org.scoverage"            %  "sbt-scoverage"         %  v"1.2.0"
+  lazy val stats        = "com.orrsella"             %  "sbt-stats"             %  v"1.0.5"
+  lazy val updates      = "com.timushev.sbt"         %  "sbt-updates"           %  v"0.1.9"
 
-  lazy val eclipse      = "com.typesafe.sbteclipse"  %  "sbteclipse-plugin"     %  v"4.0.0-RC2"
+  lazy val eclipse      = "com.typesafe.sbteclipse"  %  "sbteclipse-plugin"     %  v"4.0.0"
   lazy val idea         = "com.github.mpeltonen"     %  "sbt-idea"              %  v"1.6.0"
 
-  lazy val echo         = "com.typesafe.sbt"         %  "sbt-echo"              %  v"0.1.15"
+  lazy val echo         = "com.typesafe.sbt"         %  "sbt-echo"              %  v"1.3.1"
   lazy val sbtCoreNext  = "org.scala-sbt"            %  "sbt-core-next"         %  "0.1.1"
 }

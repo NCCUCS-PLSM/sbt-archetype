@@ -15,4 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import edu.nccu.plsm.Plugins
+
+// reviewed: 20150714
 addSbtPlugin(Plugins.sbtCoreNext)

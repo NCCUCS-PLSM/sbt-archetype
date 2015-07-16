@@ -15,11 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import edu.nccu.plsm.Dependencies
+import edu.nccu.plsm.Settings
+
 lazy val root = (project in file("."))
   .enablePlugins(BuildInfoPlugin)
   .settings(Settings.default: _*)
   .settings(Settings.plugin: _*)
+  .settings(Settings.play: _*)
   .settings(
-    name := "sbt-archetype",
+    name := "sbt-archetype-root"
+  ).aggregate(subProject, playProject)
+
+lazy val subProject = (project in file("sub"))
+  .enablePlugins(BuildInfoPlugin)
+  .settings(Settings.default: _*)
+  .settings(Settings.plugin: _*)
+  .settings(
+    name := "sbt-archetype-project",
     libraryDependencies ++= Dependencies.project
   )
+
+lazy val playProject = (project in file("play"))
+  .enablePlugins(PlayScala, SbtWeb, BuildInfoPlugin)
+  .settings(Settings.default: _*)
+  .settings(Settings.plugin: _*)
+  .settings(Settings.play: _*)
+  .settings(
+    name := "sbt-archetype-play",
+    libraryDependencies ++= Dependencies.playProject
+  ).dependsOn(subProject)

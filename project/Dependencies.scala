@@ -1,5 +1,3 @@
-import sbt.Def
-
 /*
  * Licensed to the Programming Language and Software Methodology Lab (PLSM)
  * under one or more contributor license agreements.  See the NOTICE file
@@ -17,37 +15,70 @@ import sbt.Def
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package edu.nccu.plsm
+
+import play.sbt.PlayImport._
+import sbt._
+import sbt.Def
+
+// reviewed: 20150714
 trait Dependencies {
   object Library extends Library {
-    override protected[this] def version = Release
+    override protected[this] def version = NotSpecific
   }
   import Library._
+
+  lazy val akka = Seq(
+    akkaSlf4j,
+    akkaActor
+  )
 
   lazy val logback = Seq(
     logbackCore,
     logbackClassic
   )
 
-  lazy val slf4j = Seq(
-    slf4jApi
+  lazy val play = Seq(
+    jdbc,
+    cache,
+    ws,
+    filters,
+    json,
+    evolutions,
+    playSlick,
+    hikariCP,
+    oracleJdbc,
+    slickExtensions
   )
 
-  lazy val tool = Seq(
-    scopt,
-    typesafeConfig
+  lazy val playTesting = Seq(
+    specs2 % Test
   )
 
   lazy val scalaTools = Def.setting{
     Seq(scalaCompiler.value, scalaReflect.value)
   }
 
+  lazy val slf4j = Seq(
+    slf4jApi
+  )
+
   lazy val testing = Seq(
+    specs,
     scalatest,
     mockito
   )
 
-  lazy val project = slf4j ++ logback ++ tool ++ testing
+  lazy val tool = Seq(
+    scopt,
+    typesafeConfig,
+    protobuf,
+    javassit
+  )
 
+  lazy val project = akka ++ logback ++ slf4j ++ testing ++ tool
+  lazy val playProject = akka ++ logback ++ play ++ playTesting ++ slf4j ++ testing ++ tool
 }
 
 object Dependencies extends Dependencies

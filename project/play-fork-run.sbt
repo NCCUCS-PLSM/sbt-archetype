@@ -15,34 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.nccu.plsm.archetype
 
-import com.typesafe.config.ConfigFactory
-import org.slf4j.LoggerFactory
+import edu.nccu.plsm.Plugins
 
-/**
- * @version
- * @since
- */
-object Main extends App with HelloWorld
-
-trait HelloWorld {
-  private[this] val logger = LoggerFactory.getLogger(getClass)
-
-  def run(): Unit = {
-    if (logger.isInfoEnabled) {
-      (BuildInfo.toMap.toSeq ++ sys.props.toSeq.sortBy(_._1.charAt(0))) foreach {
-        case (k, v) => logger.info(s"$k: $v")
-      }
-    }
-    logger info getMessage
-  }
-
-  def getMessage: String = {
-    val config = ConfigFactory.load()
-    val appConfig = config.getConfig("app")
-    appConfig.getString("message")
-  }
-
-  run()
-}
+// reviewed: 20150714
+addSbtPlugin(Plugins.forkRun)

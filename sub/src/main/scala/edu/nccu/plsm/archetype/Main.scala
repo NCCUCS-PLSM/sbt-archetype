@@ -16,16 +16,30 @@
  * limitations under the License.
  */
 
-import edu.nccu.plsm.Plugins
+package edu.nccu.plsm.archetype
 
-// reviewed: 20150714
-Plugins.playPlugins.map(addSbtPlugin)
-addSbtPlugin(Plugins.assembly)
-addSbtPlugin(Plugins.buildInfo)
-addSbtPlugin(Plugins.cpd)
-addSbtPlugin(Plugins.gitStamp)
-addSbtPlugin(Plugins.meow)
-addSbtPlugin(Plugins.stats)
-addSbtPlugin(Plugins.scalariform)
-addSbtPlugin(Plugins.scoverage)
-addSbtPlugin(Plugins.updates)
+import com.typesafe.config.ConfigFactory
+import org.slf4j.LoggerFactory
+
+trait HelloWorld {
+  private[this] val logger = LoggerFactory.getLogger(getClass)
+
+  private final def run(): Unit = {
+    if (logger.isInfoEnabled) {
+      (BuildInfo.toMap.toSeq ++ sys.props.toSeq.sortBy(_._1.charAt(0))) foreach {
+        case (k, v) => logger.info(s"$k: $v")
+      }
+    }
+    logger info getMessage
+  }
+
+  private final def getMessage: String = {
+    val config = ConfigFactory.load()
+    val appConfig = config.getConfig("app")
+    appConfig.getString("message")
+  }
+
+  run()
+}
+
+object Main extends App with HelloWorld

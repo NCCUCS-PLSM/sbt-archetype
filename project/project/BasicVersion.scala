@@ -15,6 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package edu.nccu.plsm
+
+// reviewed: 20150714
 trait BasicVersion {
   lazy val integration = "latest.integration"
   lazy val milestone = "latest.milestone"

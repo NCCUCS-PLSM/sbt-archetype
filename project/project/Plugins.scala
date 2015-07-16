@@ -15,6 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-object Plugins extends BasicPlugin {
-  override protected[this] def version = Release
+
+package edu.nccu.plsm
+
+// reviewed: 20150714
+object Plugins extends BasicPlugin with PlayPlugin {
+  override protected[this] def version = NotSpecific
 }

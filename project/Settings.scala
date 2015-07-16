@@ -15,32 +15,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package edu.nccu.plsm
+
+import play.sbt.PlayImport._
+import play.sbt.routes.RoutesKeys._
 import com.atlassian.labs.gitstamp.GitStampPlugin._
-import org.scalastyle.sbt.ScalastylePlugin._
+import com.slidingautonomy.sbt.filter.Import._
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys.preferences
+import com.typesafe.sbt.SbtScalariform._
+import com.typesafe.sbt.digest.Import._
+import com.typesafe.sbt.gzip.Import._
+import com.typesafe.sbt.uglify.Import._
+import com.typesafe.sbt.web.Import._
+import net.ground5hark.sbt.css.Import._
 import sbt.Keys._
 import sbt._
 import sbtbuildinfo.BuildInfoPlugin.autoImport._
 
 import scala.compat.Platform
+import scalariform.formatter.preferences.AlignSingleLineCaseStatements
 
+// reviewed: 20150716
 object Settings {
   lazy val default = Seq(
     organization := "edu.nccu.plsm.archetype",
-    version := "0.0.1-SNAPSHOT",
-    crossScalaVersions := Seq(Version.scalaVersion12, Version.scalaVersion11),
+    version := "0.0.2-SNAPSHOT",
+    crossScalaVersions := Seq(Version.scala11_7, Version.scala11_6, Version.scala11_5, Version.scala11_4),
     scalaVersion := crossScalaVersions.value.head,
     scalacOptions ++= commonScalacOptions,
     scalacOptions ++= {
       scalaVersion.value match {
-        case ScalaMinorVersion("11") => {
-          ConsoleLogger().info("Using scala 2.11 configuration")
+        case v @ ScalaVersion("11", minor) if minor.toInt < 7 => {
+          ConsoleLogger().info(s"[$v]Using Asm configuration.")
           Seq(
             "-optimise",
             "-Xverify"
           )
         }
-        case ScalaMinorVersion("12") => {
-          ConsoleLogger().info("Using scala 2.12 configuration")
+        case v => {
+          ConsoleLogger().info(s"[$v]Using GenBCode configuration.")
           Seq(
             "-Ybackend:GenBCode",
             "-Ylinearizer:dump",
@@ -72,11 +86,18 @@ object Settings {
     ),
     conflictManager := ConflictManager.latestRevision
   )
+  lazy val play: Seq[Setting[_]] = Seq(
+    emojiLogs,
+    pipelineStages := Seq(filter, cssCompress, uglify, digest, gzip),
+    routesGenerator := InjectedRoutesGenerator
+  )
   lazy val plugin = Seq(
+    /*
     compileScalastyle <<= scalastyle in Compile toTask "",
     testScalastyle <<= scalastyle in Test toTask "",
     (compile in Compile) <<= (compile in Compile) dependsOn compileScalastyle,
     (compile in Test) <<= (compile in Test) dependsOn testScalastyle,
+    */
 
     buildInfoKeys := Seq(
       name,
@@ -94,11 +115,12 @@ object Settings {
     packageOptions <+= (packageOptions in Compile, packageOptions in packageBin) map {
       (a, b) =>
         Package.ManifestAttributes(repoInfo: _*)
-    }
-  )
-  private[this] lazy val ScalaMinorVersion = """^2\.([0-9]+)\..+$""".r
-  private[this] lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
-  private[this] lazy val testScalastyle = taskKey[Unit]("testScalastyle")
+    },
+    preferences := preferences.value.setPreference(AlignSingleLineCaseStatements, true)
+  ) ++ scalariformSettings
+  private[this] lazy val ScalaVersion = """^2\.([0-9]+)\.([0-9]+)?-.+$""".r
+  //private[this] lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
+  //private[this] lazy val testScalastyle = taskKey[Unit]("testScalastyle")
   private[this] lazy val commonScalacOptions = Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -107,12 +129,14 @@ object Settings {
     "-g:vars",
     "-target:jvm-1.8",
     "-unchecked",
+    "-uniqid",
     "-Xcheckinit",
     "-Xexperimental",
     "-Xfuture",
     "-Xlint:_",
     "-Xlog-free-terms",
     "-Xlog-free-types",
+    "-Xlog-implicits",
     "-Xlog-reflective-calls",
     "-Xmigration",
     "-Xprint-types",
@@ -120,9 +144,15 @@ object Settings {
     "-Yclosure-elim",
     "-Yconst-opt",
     "-Ydead-code",
+    "-Yinfer-argument-types",
     "-Yinline",
     "-Yinline-handlers",
     "-Yopt:_",
+    "-Yopt-warnings:_",
+    "-Yrangepos",
+    //"-Yshow-symkinds",
+    //"-Yshow-symowners",
+    //"-Yshow-syms",
     "-Ywarn-adapted-args",
     "-Ywarn-dead-code",
     "-Ywarn-inaccessible",
