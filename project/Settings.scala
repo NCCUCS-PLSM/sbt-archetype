@@ -135,7 +135,7 @@ object Settings {
       .setPreference(RewriteArrowSymbols, true)
       .setPreference(AlignParameters, true)
   ) ++ scalariformSettings
-  private[this] lazy val ScalaVersion = """^2\.([0-9]+)\.([0-9]+)?-.+$""".r
+  private[this] lazy val ScalaVersion = """^2\.([0-9]+)\.(.+)$""".r
   //private[this] lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
   //private[this] lazy val testScalastyle = taskKey[Unit]("testScalastyle")
   private[this] lazy val commonScalacOptions = Seq(
