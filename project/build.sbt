@@ -16,30 +16,7 @@
  * limitations under the License.
  */
 
-package edu.nccu.plsm.archetype
-
-import com.typesafe.config.ConfigFactory
-import org.slf4j.LoggerFactory
-
-trait HelloWorld {
-  private[this] val logger = LoggerFactory.getLogger(getClass)
-
-  private final def run(): Unit = {
-    if (logger.isInfoEnabled) {
-      (BuildInfo.toMap.toSeq ++ sys.props.toSeq.sortBy(_._1.charAt(0))) foreach {
-        case (k, v) => logger.info(s"$k: $v")
-      }
-    }
-    logger info getMessage
-  }
-
-  def getMessage: String = {
-    val config = ConfigFactory.load()
-    val appConfig = config.getConfig("app")
-    appConfig.getString("message")
-  }
-
-  run()
-}
-
-object Main extends App with HelloWorld
+resolvers ++= Seq(
+  "PLSM Maven" at "http://www.plsm.cs.nccu.edu.tw/repository/public",
+  Resolver.url("PLSM Ivy", url("http://www.plsm.cs.nccu.edu.tw/repository/remote-ivy-repos"))(Resolver.ivyStylePatterns)
+)

@@ -18,13 +18,13 @@
 
 package edu.nccu.plsm
 
-// reviewed: 20150714
+// reviewed: 20150720
 trait BasicVersion {
   lazy val akka = "2.4-M2"
   lazy val logback = "1.1.4-PLSM-SNAPSHOT"
   lazy val slf4j = "1.7.12"
 
-  lazy val scala12 = "2.12.0-M1"
+  lazy val scala12 = "2.12.0-M2"
   lazy val scala11_7 = "2.11.7"
   lazy val scala11_6 = "2.11.6"
   lazy val scala11_5 = "2.11.5"

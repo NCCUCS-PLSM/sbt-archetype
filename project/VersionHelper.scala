@@ -1,7 +1,3 @@
-/**
- * @version
- * @since
- */
 /*
  * Licensed to the Programming Language and Software Methodology Lab (PLSM)
  * under one or more contributor license agreements.  See the NOTICE file

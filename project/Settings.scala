@@ -18,8 +18,6 @@
 
 package edu.nccu.plsm
 
-import play.sbt.PlayImport._
-import play.sbt.routes.RoutesKeys._
 import com.atlassian.labs.gitstamp.GitStampPlugin._
 import com.slidingautonomy.sbt.filter.Import._
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys.preferences
@@ -29,12 +27,14 @@ import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.uglify.Import._
 import com.typesafe.sbt.web.Import._
 import net.ground5hark.sbt.css.Import._
+import play.sbt.PlayImport._
+import play.sbt.routes.RoutesKeys._
 import sbt.Keys._
 import sbt._
 import sbtbuildinfo.BuildInfoPlugin.autoImport._
 
 import scala.compat.Platform
-import scalariform.formatter.preferences.AlignSingleLineCaseStatements
+import scalariform.formatter.preferences._
 
 // reviewed: 20150716
 object Settings {
@@ -46,21 +46,20 @@ object Settings {
     scalacOptions ++= commonScalacOptions,
     scalacOptions ++= {
       scalaVersion.value match {
-        case v @ ScalaVersion("11", minor) if minor.toInt < 7 => {
-          ConsoleLogger().info(s"[$v]Using Asm configuration.")
+        case v @ ScalaVersion("11", minor) if minor.toInt < 7 =>
+          ConsoleLogger().info(s"[$v] Using Asm configuration.")
           Seq(
             "-optimise",
             "-Xverify"
           )
-        }
-        case v => {
-          ConsoleLogger().info(s"[$v]Using GenBCode configuration.")
+        case v =>
+          ConsoleLogger().info(s"[$v] Using GenBCode configuration.")
           Seq(
             "-Ybackend:GenBCode",
             "-Ylinearizer:dump",
-            "-Yopt-inline-heuristics:everything"
+            "-Yopt-inline-heuristics:everything",
+            "-Yopt-warnings:_"
           )
-        }
       }
     },
     javacOptions ++= Seq(
@@ -84,6 +83,18 @@ object Settings {
       "PLSM Maven" at "http://www.plsm.cs.nccu.edu.tw/repository/public",
       Resolver.url("PLSM Ivy", url("http://www.plsm.cs.nccu.edu.tw/repository/remote-ivy-repos"))(Resolver.ivyStylePatterns)
     ),
+    publishMavenStyle := false,
+    publishTo <<= version {
+      version: String => {
+        val baseUrl = "http://www.plsm.cs.nccu.edu.tw/repository/"
+        val (name, url) = if (version.trim.endsWith("SNAPSHOT")) {
+          ("ivy-snapshot-local", baseUrl + "ivy-snapshot-local")
+        } else {
+          ("ivy-release-local", baseUrl + "ivy-release-local")
+        }
+        Some(Resolver.url(name, new URL(url))(Resolver.ivyStylePatterns))
+      }
+    },
     conflictManager := ConflictManager.latestRevision
   )
   lazy val play: Seq[Setting[_]] = Seq(
@@ -116,7 +127,13 @@ object Settings {
       (a, b) =>
         Package.ManifestAttributes(repoInfo: _*)
     },
-    preferences := preferences.value.setPreference(AlignSingleLineCaseStatements, true)
+    preferences := preferences.value
+      .setPreference(AlignSingleLineCaseStatements, true)
+      .setPreference(AlignSingleLineCaseStatements.MaxArrowIndent, 100)
+      .setPreference(DoubleIndentClassDeclaration, true)
+      .setPreference(PreserveDanglingCloseParenthesis, true)
+      .setPreference(RewriteArrowSymbols, true)
+      .setPreference(AlignParameters, true)
   ) ++ scalariformSettings
   private[this] lazy val ScalaVersion = """^2\.([0-9]+)\.([0-9]+)?-.+$""".r
   //private[this] lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
@@ -129,14 +146,12 @@ object Settings {
     "-g:vars",
     "-target:jvm-1.8",
     "-unchecked",
-    "-uniqid",
     "-Xcheckinit",
     "-Xexperimental",
     "-Xfuture",
     "-Xlint:_",
     "-Xlog-free-terms",
     "-Xlog-free-types",
-    "-Xlog-implicits",
     "-Xlog-reflective-calls",
     "-Xmigration",
     "-Xprint-types",
@@ -148,11 +163,7 @@ object Settings {
     "-Yinline",
     "-Yinline-handlers",
     "-Yopt:_",
-    "-Yopt-warnings:_",
     "-Yrangepos",
-    //"-Yshow-symkinds",
-    //"-Yshow-symowners",
-    //"-Yshow-syms",
     "-Ywarn-adapted-args",
     "-Ywarn-dead-code",
     "-Ywarn-inaccessible",

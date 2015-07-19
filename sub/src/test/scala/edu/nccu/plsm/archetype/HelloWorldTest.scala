@@ -15,17 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package edu.nccu.plsm.archetype
 
-import archetype.HelloWorld
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
-/**
- * @version
- * @since
- */
 class HelloWorldTest extends FlatSpec with MockitoSugar with Matchers {
 
   class HelloWordClass extends HelloWorld
